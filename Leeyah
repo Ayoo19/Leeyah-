@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For My Aliya 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+  body{background:#fff0f5;overflow-x:hidden;min-height:100vh;}
+  .hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .heart{position:absolute;color:#ff8fab;animation:float 6s linear infinite;opacity:.7}
+  @keyframes float{0%{transform:translateY(100vh) scale(.5) rotate(0deg);opacity:0}10%{opacity:.8}100%{transform:translateY(-10vh) scale(1.2) rotate(360deg);opacity:0}}
+  
+  .container{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:2px solid #ffc2d1;border-radius:32px;padding:48px 36px;max-width:520px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(255,105,145,.25);animation:pop .8s ease}
+  @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  
+  .name{font-family:'Great Vibes',cursive;font-size:64px;color:#ff4d6d;text-shadow:0 0 20px #ffb3c6;margin-bottom:8px}
+  .subtitle{color:#a87685;font-size:15px;margin-bottom:28px;letter-spacing:.5px}
+  .letter{font-size:16px;line-height:1.8;color:#5a3d45;margin:24px 0;text-align:left;background:#fff8fa;padding:20px;border-radius:16px;border-left:4px solid #ff8fab}
+  
+  .question{font-size:28px;font-weight:600;color:#c9184a;margin:28px 0 24px;line-height:1.3}
+  
+  .btns{display:flex;gap:16px;justify-content:center;margin-top:24px;position:relative;height:60px}
+  .yes{background:linear-gradient(135deg,#ff4d6d,#ff8fab);color:white;border:none;padding:16px 32px;border-radius:999px;font-size:18px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(255,77,109,.4);animation:beat 1.2s infinite;transition:.3s}
+  .yes:hover{transform:scale(1.05)}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .no{background:#f8f8f8;color:#999;border:1px solid #eee;padding:12px 20px;border-radius:999px;font-size:14px;cursor:pointer;position:absolute;transition:.2s}
+  
+  .success{display:none}
+  .success h1{font-family:'Great Vibes',cursive;font-size:56px;color:#ff4d6d}
+  .success p{font-size:18px;color:#5a3d45;margin:16px 0}
+  .photo-frame{margin:24px auto;width:220px;height:220px;border-radius:24px;background:linear-gradient(135deg,#ffc2d1,#ff8fab);display:flex;align-items:center;justify-content:center;color:white;font-family:'Great Vibes';font-size:32px;box-shadow:0 12px 32px rgba(255,77,109,.3)}
+  
+  .music{position:fixed;top:16px;right:16px;z-index:10;background:white;border:1px solid #ffc2d1;border-radius:999px;padding:8px 14px;font-size:12px;cursor:pointer;color:#ff4d6d}
+</style>
+</head>
+<body>
+
+<button class="music" id="musicBtn" onclick="toggleMusic()">🎵 Play music</button>
+<audio id="bgMusic" loop><source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_5a185a276d.mp3" type="audio/mpeg"></audio>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="container">
+  <div class="card" id="mainCard">
+    <div id="step1">
+      <h1 class="name">Hey Aliya 👑💖</h1>
+      <p class="subtitle">I made this little corner of the internet, just for you</p>
+      <button class="yes" onclick="nextStep()">Click here my love ❤️</button>
+    </div>
+
+    <div id="step2" style="display:none">
+      <h1 class="name" style="font-size:48px">Aliya...</h1>
+      <div class="letter">
+        From the moment you came into my life, everything became brighter. Your smile is my favorite sunrise, your laugh is my favorite song.<br><br>
+        You're not just beautiful, Aliya. You're my peace, my happiness, my favorite person. I can't imagine my days without you in it anymore.
+      </div>
+      <h2 class="question">So I have to ask you from the bottom of my heart...<br><br>Aliya, will you be my girlfriend? 🥺💖</h2>
+      
+      <div class="btns">
+        <button class="yes" id="yesBtn" onclick="sheSaidYes()">YES! I will 😍</button>
+        <button class="no" id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">No</button>
+      </div>
+      <p style="font-size:11px;color:#c9a1ad;margin-top:50px">ps: You can't say no 😜</p>
+    </div>
+
+    <div class="success" id="success">
+      <h1>She said YES!!! 💖💖</h1>
+      <div class="photo-frame">Aliya & Me</div>
+      <p><b>Aliya is officially my girlfriend!</b><br>I'm the luckiest guy alive.<br>Forever starts now. 💌</p>
+      <p style="font-family:'Great Vibes';font-size:28px;margin-top:16px;color:#ff4d6d">I love you, Aliya</p>
+      <button class="yes" style="margin-top:20px" onclick="confettiRain()">Celebrate us 🎉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // floating hearts
+  const heartsContainer = document.getElementById('hearts');
+  setInterval(()=>{
+    const h = document.createElement('div');
+    h.className='heart';
+    h.innerHTML='❤';
+    h.style.left=Math.random()*100+'vw';
+    h.style.fontSize=(12+Math.random()*24)+'px';
+    h.style.animationDuration=(4+Math.random()*4)+'s';
+    heartsContainer.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },300);
+
+  function nextStep(){
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').style.display='block';
+    playMusic();
+  }
+
+  function moveNo(){
+    const btn = document.getElementById('noBtn');
+    const x = Math.random()*260 - 130;
+    const y = Math.random()*200 - 100;
+    btn.style.transform=`translate(${x}px, ${y}px)`;
+  }
+
+  function sheSaidYes(){
+    document.getElementById('step2').style.display='none';
+    document.getElementById('success').style.display='block';
+    confettiRain();
+    playMusic();
+  }
+
+  function confettiRain(){
+    const duration = 3000;
+    const end = Date.now() + duration;
+    (function frame(){
+      confetti({particleCount:3,angle:60,spread:55,origin:{x:0},colors:['#ff4d6d','#ffc2d1','#ff8fab']});
+      confetti({particleCount:3,angle:120,spread:55,origin:{x:1},colors:['#ff4d6d','#ffc2d1','#ff8fab']});
+      if(Date.now()<end) requestAnimationFrame(frame);
+    }());
+  }
+
+  let playing=false;
+  function playMusic(){ const a=document.getElementById('bgMusic'); a.volume=0.4; a.play().catch(()=>{}); playing=true; document.getElementById('musicBtn').innerText='🔇 Pause'; }
+  function toggleMusic(){
+    const a=document.getElementById('bgMusic'); const b=document.getElementById('musicBtn');
+    if(playing){a.pause();b.innerText='🎵 Play music';playing=false}else{playMusic()}
+  }
+</script>
+</body>
+</html>
